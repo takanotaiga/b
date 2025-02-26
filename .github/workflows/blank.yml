@@ -12,13 +12,13 @@ jobs:
         run: |
           echo "Received Event Data:"
           echo "Ref: ${{ github.event.client_payload.ref }}"
-          echo "Ref URL: ${{ github.event.client_payload.ref_url }}"
+          echo "Repo: ${{ github.event.client_payload.repo }}"
 
-      - uses: actions/checkout@v4
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.client_payload.ref }}
+      # - uses: actions/checkout@v4
+      # - name: Checkout Repository
+      #   uses: actions/checkout@v4
+      #   with:
+      #     ref: ${{ github.event.client_payload.ref }}
 
-      - name: show
-        run: ls
+      # - name: show
+      #   run: ls
