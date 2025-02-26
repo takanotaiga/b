@@ -14,12 +14,17 @@ jobs:
           echo "Ref: ${{ github.event.client_payload.ref }}"
           echo "Repo: ${{ github.event.client_payload.repo }}"
 
-      - uses: actions/checkout@v4
-      - name: Checkout Repository
+      - name: Checkout THIS Repository
+        uses: actions/checkout@v4
+        with:
+          path: ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+      
+      - name: Checkout GET Repository
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.client_payload.repo }}
           ref: ${{ github.event.client_payload.ref }}
+          path: "receive_repository"
 
       - name: show
         run: ls
