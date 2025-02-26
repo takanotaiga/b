@@ -17,14 +17,14 @@ jobs:
       - name: Checkout THIS Repository
         uses: actions/checkout@v4
         with:
-          path: ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+          path: "owner_repo"
       
       - name: Checkout GET Repository
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.client_payload.repo }}
           ref: ${{ github.event.client_payload.ref }}
-          path: "receive_repository"
+          path: "receive_repo"
 
       - name: show
         run: ls
