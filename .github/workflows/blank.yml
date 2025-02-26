@@ -8,11 +8,13 @@ jobs:
   receive-repository-dispatch:
     runs-on: ubuntu-latest
     steps:
-      - name: Receive
+      - name: Print Received Data
         run: |
-          env=${{ github.event.client_payload.env }}
-          echo "ENV = $env"
-      - name: checkout
-        uses: actions/checkout@master
+          echo "Received Event Data:"
+          echo "Ref: ${{ github.event.client_payload.ref }}"
+          echo "Ref URL: ${{ github.event.client_payload.ref_url }}"
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.client_payload.ref }}
