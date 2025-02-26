@@ -14,6 +14,7 @@ jobs:
           echo "Ref: ${{ github.event.client_payload.ref }}"
           echo "Ref URL: ${{ github.event.client_payload.ref_url }}"
 
+      - uses: actions/checkout@v4
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
