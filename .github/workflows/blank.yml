@@ -27,4 +27,4 @@ jobs:
           path: "receive_repo"
 
       - name: show
-        run: ls
+        run: ls ./owner_repo && ls ./receive_repo
