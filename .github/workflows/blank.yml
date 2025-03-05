@@ -29,24 +29,24 @@ jobs:
       - name: Checkout THIS Repository
         uses: actions/checkout@v4
         with:
-          path: "owner_repo"
+          path: src/owner_repo
       
       - name: Checkout GET Repository
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.client_payload.repo }}
           ref: ${{ github.event.client_payload.ref }}
-          path: "receive_repo"
+          path: src/receive_repo
 
       - name: show
-        run: ls ./owner_repo && ls ./receive_repo
+        run: ls src
 
       - name: Resolve rosdep and install colcon mixin
         run: |
           apt-get update
           apt-get install -y python3-pip python3-colcon-lcov-result lcov unzip gcovr
           rosdep update --include-eol-distros
-          rosdep install -iy --from-paths ./ --rosdistro ${{ matrix.rosdistro }}
+          rosdep install -iy --from-paths src --rosdistro ${{ matrix.rosdistro }}
           colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
           colcon mixin update default
         shell: bash
@@ -60,3 +60,11 @@ jobs:
             -DBUILD_CPP_MOCK_SCENARIOS=ON \
             -DBUILD_TESTING=true
         shell: bash
+
+      # - name: Colcon test
+      #   run: |
+      #     source /opt/ros/${{ matrix.rosdistro }}/setup.bash
+      #     source install/local_setup.bash
+      #     colcon test --event-handlers console_cohesion+ --packages-select ${{ steps.list_packages.outputs.package_list }}
+      #     colcon lcov-result --packages-select ${{ steps.list_packages.outputs.package_list }}
+      #   shell: bash
