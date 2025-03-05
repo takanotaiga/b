@@ -6,7 +6,19 @@ on:
 
 jobs:
   receive-repository-dispatch:
-    runs-on: ubuntu-latest
+    name: BuildAndRun
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 180
+    container: ros:${{ matrix.rosdistro }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    strategy:
+      fail-fast: false
+      matrix:
+        rosdistro: [humble]
+        runs_on: [ubuntu-22.04]
+        cmake_build_type: [RelWithDebInfo, Release]
+    
     steps:
       - name: Print Received Data
         run: |
@@ -28,3 +40,23 @@ jobs:
 
       - name: show
         run: ls ./owner_repo && ls ./receive_repo
+
+      - name: Resolve rosdep and install colcon mixin
+        run: |
+          apt-get update
+          apt-get install -y python3-pip python3-colcon-lcov-result lcov unzip gcovr
+          rosdep update --include-eol-distros
+          rosdep install -iy --from-paths src --rosdistro ${{ matrix.rosdistro }}
+          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        shell: bash
+      
+      - name: Build
+        run: |
+          source /opt/ros/${{ matrix.rosdistro }}/setup.bash
+          colcon build --symlink-install \
+          --cmake-args \
+            -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }} \
+            -DBUILD_CPP_MOCK_SCENARIOS=ON \
+            -DBUILD_TESTING=true
+        shell: bash
