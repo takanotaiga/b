@@ -69,5 +69,4 @@ jobs:
           source /opt/ros/${{ matrix.rosdistro }}/setup.bash
           source install/local_setup.bash
           colcon test --event-handlers console_cohesion+
-          colcon lcov-result
         shell: bash
